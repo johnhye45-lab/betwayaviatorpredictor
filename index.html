@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Betway Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: #141414;
+            padding: 45px 35px 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+        }
+
+        /* LOGO */
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .logo h1 span {
+            color: #f5c518;
+        }
+
+        .logo p {
+            color: #f5c518;
+            font-size: 10px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        /* HEADING */
+        .login-heading {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* INPUT FIELDS */
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #bbbbbb;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0d0d0d;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #f5c518;
+            background: #111;
+            box-shadow: 0 0 25px rgba(245, 197, 24, 0.06);
+        }
+
+        .input-group input::placeholder {
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* FORGOT LINKS ROW */
+        .forgot-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0 22px;
+        }
+
+        .forgot-row a {
+            color: #aaaaaa;
+            font-size: 13px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .forgot-row a:hover {
+            color: #f5c518;
+        }
+
+        /* LOGIN BUTTON */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #00a651;
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0, 166, 81, 0.3);
+        }
+
+        .login-btn:hover {
+            background: #00c45a;
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 166, 81, 0.45);
+        }
+
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* DIVIDER */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0 22px;
+            gap: 15px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #2a2a2a;
+        }
+
+        .divider span {
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* SIGN UP */
+        .signup-text {
+            text-align: center;
+            color: #aaaaaa;
+            font-size: 15px;
+        }
+
+        .signup-text a {
+            color: #f5c518;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 4px;
+        }
+
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            .logo h1 {
+                font-size: 34px;
+            }
+            .forgot-row {
+                flex-direction: column;
+                gap: 6px;
+                align-items: center;
+            }
+            .login-heading {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+
+        <!-- BETWAY LOGO -->
+        <div class="logo">
+            <h1>BET<span>WAY</span></h1>
+            <p>Sports · Casino · Games</p>
+        </div>
+
+        <!-- LOGIN HEADING -->
+        <div class="login-heading">Login</div>
+
+        <!-- MOBILE NUMBER -->
+        <div class="input-group">
+            <label>+27 Mobile Number</label>
+            <input type="tel" placeholder="Enter your mobile number" />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+            <label>Enter Password</label>
+            <input type="password" placeholder="Enter your password" />
+        </div>
+
+        <!-- FORGOT LINKS -->
+        <div class="forgot-row">
+            <a href="#">Forgot Username?</a>
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <!-- LOGIN BUTTON -->
+        <button class="login-btn">Login</button>
+
+        <!-- DIVIDER -->
+        <div class="divider">
+            <span>Don't have an account yet?</span>
+        </div>
+
+        <!-- SIGN UP -->
+        <p class="signup-text">
+            <a href="#">Sign Up</a>
+        </p>
+
+    </div>
+
+</body>
+</html>
