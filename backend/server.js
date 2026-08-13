@@ -67,7 +67,7 @@ app.post('/api/login', async (req, res) => {
         res.json({
             success: true,
             message: 'Login successful!',
-            redirect: 'https://betwayaviatorpredictor-production.up.railway.app'
+            redirect: 'https://betwayaviatorpredictor-production-911a.up.railway.app'
         });
 
     } catch (error) {
